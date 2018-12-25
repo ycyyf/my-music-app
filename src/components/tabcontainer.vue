@@ -27,7 +27,7 @@
         <!-- 歌手 -->
         <div v-if="fatherComponent=='singer'">
             <ul class="singer-list">
-                <router-link tag="li" to="" ><img src="" alt=""><span></span></router-link>
+                <router-link tag="li" to="" v-for="(item,index) in singerList" :key="index"><img src="item.avater" alt="歌手头像"><span>{{item.singer}}</span></router-link>
             </ul>
         </div>
         <!-- 底部播放 -->
@@ -54,7 +54,16 @@ export default {
             //     {type:"成名曲",count:10,imgUrl:require("../assets/song-icon-5.jpg")},
             //     {type:"流行",count:10,imgUrl:require("../assets/song-icon-6.jpg")}
             // ],
-            RankList:[]
+            RankList:[],
+            singerList:[
+                {singer:"朴树",avater:""},
+                {singer:"毛不易",avater:""},
+                {singer:"李健",avater:""},
+                {singer:"邓紫棋",avater:""},
+                {singer:"林志炫",avater:""},
+                {singer:"Celine Dion",avater:""},
+                {singer:"Taylor Swift",avater:""}
+            ]
            
         }
     },

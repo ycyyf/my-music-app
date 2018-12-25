@@ -11,7 +11,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/album':{
-        target:'https://api.hibai.cn',
+        target:'http://api01.idataapi.cn:8000',
         changeOrigin:true,
         pathRewrite:{
           '^/album':''
