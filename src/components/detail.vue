@@ -4,8 +4,8 @@
             <p><img :src="getImg" alt="" ><img src="../assets/arrow-left.png" alt="返回上级" @click="goBack()"><span>{{getType}}</span></p>
         </div>
         <ul class="songs-list">
-            <li class="play-all"><img :src="playAllImg" alt="播放全部" @click="changePlayStatus()"><span>播放全部(共{{songs.length}}首)</span></li>
-            <router-link tag='li' :to="{path:'/play?index='+index}" v-for="(list,index) in songs" :key="index"><img :src="list.pic" alt="歌曲头像"><span>{{list.title}}</span> </router-link>
+            <li class="play-all"><img :src="playAllImg" alt="播放全部" @click="changePlayStatus()"><span>播放全部(共{{song.length}}首)</span></li>
+            <router-link tag='li' :to="{path:'/play?index='+index}" v-for="(list,index) in song" :key="index"><img :src="list.coverUrl" alt="歌曲头像"><span>{{list.title}}</span> </router-link>
         </ul> 
     </div>
 </template>
@@ -14,11 +14,11 @@
 import {mapState,mapActions} from 'vuex'
 export default {
     name:"Detail",
-    props:['songs'],
+    props:['song'],
     data(){
         return{
             id:0,
-            playAllImg:require('../assets/暂停.png')
+            playAllImg:require('../assets/暂停.png'),
             // songList:[]
         }
     },
@@ -38,19 +38,35 @@ export default {
     },
     computed:{
         ...mapState([
-            "RecommendList"
+            "RecommendList","singerList"
         ]),
         getImg:function(){
-            return this.RecommendList[this.id].imgUrl;
+            if(this.ConType=="R")
+            {
+                return this.RecommendList[this.id].imgUrl;
+            }
+            else
+            {
+                return this.singerList[this.id].avater;
+            }
         },
         getType:function(){
-            return this.RecommendList[this.id].type;
+            if(this.ConType=="R")
+            {
+                return this.RecommendList[this.id].type;
+            }
+            else
+            {
+                return this.singerList[this.id].singer;
+            }
         }
     },
     mounted(){
         //  console.log("mounted");
         // 触发store中的action并传递数据  // 刷新页面后参数会消失
         this.id=this.$route.query.id;
+        this.ConType=this.$route.query.ConType;
+        console.log(this.ConType);
     }
 }
 </script>

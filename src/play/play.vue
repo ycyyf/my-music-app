@@ -2,10 +2,10 @@
     <div class="play" :style="{background:'rgb(143, 140, 140)',height:screenHeight}">
         <div class="header">
             <img :src="backImg" alt="返回上一级" @click="goBack">
-            <p><span>{{songs[index].title}}</span><br><span>{{songs[index].author}}</span></p>
+            <p><span>{{song[index].title}}</span><br><span>{{song[index].author}}</span></p>
         </div>
         <div class="lyric-area" @click="exchange">
-            <img :src="songs[index].pic" alt="唱片图片" v-if="showLyric">
+            <img :src="song[index].coverUrl" alt="唱片图片" v-if="showLyric">
             <ul v-else>
                 <li v-for="(item,index) in activeLyricArr" :key="index" :class="{'activeLyric':currentTime==item.time.substr(0,5)}">{{item.lyric}}</li>
             </ul>
@@ -13,8 +13,10 @@
         <div class="play-control">
             <p>
                 <!-- <span>{{activeLyricArr[0].time}}</span> -->
-                <audio :src="songs[index].url" controls autoplay></audio>
+                <!-- <audio src="http://www.kugou.com/song/#hash=79b5a1e39aad83a9a3b55921e307b3b7&album_id=2944963" controls autoplay></audio> -->
                 <!-- <span>{{activeLyricArr[activeLyricArr.length-1].time}}</span> -->
+                <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="298" height="52" src="http://www.kugou.com/song/#hash=79b5a1e39aad83a9a3b55921e307b3b7&album_id=2944963"></iframe>
+                <!-- <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=469699266&auto=1&height=66"></iframe> -->
             </p>
         </div>
     </div>
@@ -23,7 +25,7 @@
 <script>
 export default {
     name:'Play',
-    props:['songs'],
+    props:['song'],
     data(){
         return{
             backImg:require('../assets/arrow-down.png'),
@@ -44,23 +46,24 @@ export default {
             this.showLyric=!this.showLyric;
         },
         getLrc:function(){
-            this.$axios("https://api.hibai.cn/music/Music/Music?id="+this.songs[this.index].id+"&type=lrc").then((res)=>{
-                // console.log(res.data);
-                var result_arr=res.data.split("\n");
-                var lyric_arr=[];
-                // console.log(result_arr);
-                for(var i=0;i<result_arr.length;i++)
-                {
-                    lyric_arr=result_arr[i].split("]");
-                    this.lyricArr.push({time:lyric_arr[0].substr(1,lyric_arr[0].length-1),lyric:lyric_arr[1]});
-                    if(i<16)
-                    {
-                        this.activeLyricArr.push({time:lyric_arr[0].substr(1,lyric_arr[0].length-1),lyric:lyric_arr[1]});
-                    }
-                }
+            this.$axios("http://www.kugou.com/song/#hash=79b5a1e39aad83a9a3b55921e307b3b7&album_id=2944963").then((res)=>{
+                console.log(res);
+                // var result_arr=res.data.split("\n");
+                // var lyric_arr=[];
+                // // console.log(result_arr);
+                // for(var i=0;i<result_arr.length;i++)
+                // {
+                //     lyric_arr=result_arr[i].split("]");
+                //     this.lyricArr.push({time:lyric_arr[0].substr(1,lyric_arr[0].length-1),lyric:lyric_arr[1]});
+                //     if(i<16)
+                //     {
+                //         this.activeLyricArr.push({time:lyric_arr[0].substr(1,lyric_arr[0].length-1),lyric:lyric_arr[1]});
+                //     }
+                // }
             }).catch((err)=>{
                 console.log(err);
             })
+            //console.log(this.song[index].lyrics);
         }
     },
     computed:{
@@ -81,6 +84,7 @@ export default {
     mounted(){
         this.getScreenHeight;
         this.index=this.$route.query.index;
+        console.log(this.song[index],url);
         this.getLrc();
     }
 }

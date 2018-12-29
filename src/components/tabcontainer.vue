@@ -14,7 +14,7 @@
             <div class="recommend-list-box">
                 <h5>推荐歌单</h5>
                 <ul class="recommend-list">
-                    <router-link tag="li"  v-for="(list,index) in RecommendList" :key="index" :to="{path:'/detail?id='+index}"><img :src="list.imgUrl" alt=""><p>{{list.type}}</p></router-link>
+                    <router-link tag="li"  v-for="(list,index) in RecommendList" :key="index" :to="{path:'/detail?id='+index+'&ConType=R'}"><img :src="list.imgUrl" alt=""><p>{{list.type}}</p></router-link>
                 </ul>
             </div>
         </div>
@@ -27,7 +27,7 @@
         <!-- 歌手 -->
         <div v-if="fatherComponent=='singer'">
             <ul class="singer-list">
-                <router-link tag="li" to="" v-for="(item,index) in singerList" :key="index"><img src="item.avater" alt="歌手头像"><span>{{item.singer}}</span></router-link>
+                <router-link tag="li" :to="{path:'/detail?id='+index+'&ConType=S'}" v-for="(item,index) in singerList" :key="index"><img src="item.avater" alt="歌手头像"><span>{{item.singer}}</span></router-link>
             </ul>
         </div>
         <!-- 底部播放 -->
@@ -55,15 +55,15 @@ export default {
             //     {type:"流行",count:10,imgUrl:require("../assets/song-icon-6.jpg")}
             // ],
             RankList:[],
-            singerList:[
-                {singer:"朴树",avater:""},
-                {singer:"毛不易",avater:""},
-                {singer:"李健",avater:""},
-                {singer:"邓紫棋",avater:""},
-                {singer:"林志炫",avater:""},
-                {singer:"Celine Dion",avater:""},
-                {singer:"Taylor Swift",avater:""}
-            ]
+            // singerList:[
+            //     {singer:"朴树",avater:""},
+            //     {singer:"毛不易",avater:""},
+            //     {singer:"李健",avater:""},
+            //     {singer:"邓紫棋",avater:""},
+            //     {singer:"林志炫",avater:""},
+            //     {singer:"Celine Dion",avater:""},
+            //     {singer:"Taylor Swift",avater:""}
+            // ]
            
         }
     },
@@ -80,7 +80,7 @@ export default {
         }
     },
     computed:mapState([
-        "RecommendList"
+        "RecommendList","singerList"
     ]),
     mounted(){
         this.play();

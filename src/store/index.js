@@ -14,6 +14,15 @@ export default new Vuex.Store({
             {type:"欧美",count:10,imgUrl:require("../assets/song-icon-4.jpg")},
             {type:"成名曲",count:10,imgUrl:require("../assets/song-icon-5.jpg")},
             {type:"流行",count:10,imgUrl:require("../assets/song-icon-6.jpg")}
+        ],
+        singerList:[
+            {singer:"朴树",avater:require("../assets/song-icon-1.jpg")},
+            {singer:"毛不易",avater:require("../assets/song-icon-1.jpg")},
+            {singer:"李健",avater:require("../assets/song-icon-1.jpg")},
+            {singer:"邓紫棋",avater:require("../assets/song-icon-1.jpg")},
+            {singer:"林志炫",avater:require("../assets/song-icon-1.jpg")},
+            {singer:"Celine Dion",avater:require("../assets/song-icon-1.jpg")},
+            {singer:"Taylor Swift",avater:require("../assets/song-icon-1.jpg")}
         ]
     },
     actions:{
