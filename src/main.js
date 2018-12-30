@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import App from './App'
+//import Play from './play/play.vue'
 import store from './store/index.js'
 import router from './router/index.js'
 import VueRouter from 'vue-router'
@@ -19,6 +20,6 @@ new Vue({
   el: '#app',
   router,
   store,
-  components: { App },
+  components: { App},
   template: '<App/>'
 })

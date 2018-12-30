@@ -7,16 +7,14 @@
         <div class="lyric-area" @click="exchange">
             <img :src="song[index].coverUrl" alt="唱片图片" v-if="showLyric">
             <ul v-else>
-                <li v-for="(item,index) in activeLyricArr" :key="index" :class="{'activeLyric':currentTime==item.time.substr(0,5)}">{{item.lyric}}</li>
+                <li v-for="(item,index) in lyricArr" :key="index" >{{item}}</li>
             </ul>
         </div>
         <div class="play-control">
             <p>
                 <!-- <span>{{activeLyricArr[0].time}}</span> -->
-                <!-- <audio src="http://www.kugou.com/song/#hash=79b5a1e39aad83a9a3b55921e307b3b7&album_id=2944963" controls autoplay></audio> -->
+                <audio :src="playUrl" controls autoplay @click="controlPlay(this)"></audio>
                 <!-- <span>{{activeLyricArr[activeLyricArr.length-1].time}}</span> -->
-                <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="298" height="52" src="http://www.kugou.com/song/#hash=79b5a1e39aad83a9a3b55921e307b3b7&album_id=2944963"></iframe>
-                <!-- <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=469699266&auto=1&height=66"></iframe> -->
             </p>
         </div>
     </div>
@@ -34,58 +32,58 @@ export default {
             index:0,
             lyricArr:[],
             activeLyricArr:[],
-            currentTime:this.getNextLyric
+            currentTime:"",
+            songurl:"",
+            playUrl:""
         }
     },
     methods:{
         goBack(){
-            // this.backImg="require('../assets/arrow-left.png')";
+            this.backImg="require('../assets/arrow-left.png')";
             this.$router.go(-1);
         },
         exchange(){
             this.showLyric=!this.showLyric;
         },
-        getLrc:function(){
-            this.$axios("http://www.kugou.com/song/#hash=79b5a1e39aad83a9a3b55921e307b3b7&album_id=2944963").then((res)=>{
-                console.log(res);
-                // var result_arr=res.data.split("\n");
-                // var lyric_arr=[];
-                // // console.log(result_arr);
-                // for(var i=0;i<result_arr.length;i++)
-                // {
-                //     lyric_arr=result_arr[i].split("]");
-                //     this.lyricArr.push({time:lyric_arr[0].substr(1,lyric_arr[0].length-1),lyric:lyric_arr[1]});
-                //     if(i<16)
-                //     {
-                //         this.activeLyricArr.push({time:lyric_arr[0].substr(1,lyric_arr[0].length-1),lyric:lyric_arr[1]});
-                //     }
-                // }
+        getPlayUrl:function(){
+            var htmlUrl=this.song[this.index].url.split("#")[1]+new Date().getTime();
+            console.log(htmlUrl);
+            this.songurl="/playSong/index.php?r=play/getdata&"+htmlUrl;
+        },
+        getPlayDetail:function(){
+            this.getPlayUrl();
+            this.$axios.get(this.songurl).then((res)=>{
+                var result=res.data.data;
+                this.playUrl=result.play_url;
+                this.lyricArr=result.lyrics.split("\r\n");
+                console.log(this.lyricArr);
             }).catch((err)=>{
                 console.log(err);
             })
-            //console.log(this.song[index].lyrics);
+        },
+        controlPlay:function(obj){
+            if(obj.paused)
+            {
+                obj.play();
+            }
+            else
+            {
+                obj.pause();
+            }
         }
+        
     },
     computed:{
         getScreenHeight:function(){
             this.screenHeight=screen.height+'px';
-        },
-        getNextLyric(){
-            var curTime=document.getElementsByTagName("audio")[0].currentTime;
-            return curTime;
         }
-        
     },
     watch:{
-        currentTime:function(newVal){
-            console.log(newVal);
-        }
     },
     mounted(){
         this.getScreenHeight;
         this.index=this.$route.query.index;
-        console.log(this.song[index],url);
-        this.getLrc();
+        this.getPlayDetail();
     }
 }
 </script>
@@ -145,12 +143,14 @@ export default {
 }
 .lyric-area ul{
     box-sizing: border-box;
-    width:180px;
+    width:280px;
     height:300px;
     /* border:1px solid red; */
     margin:10px auto;
     overflow: auto;
-    color:rgb(224, 206, 206)
+    color:rgb(224, 206, 206);
+    font-size: 16px;
+    text-align: left;
 }
 @keyframes my-rotate {
     0% {transform: rotate(0)}
@@ -167,6 +167,11 @@ export default {
 }
 .activeLyric{
     color:#fff;
+}
+audio{
+    width:100%;
+    /* height:60px; */
+    /* border:1px solid red; */
 }
 </style>
 

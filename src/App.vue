@@ -31,33 +31,45 @@ export default {
       //     }).catch((err)=>{
       //         console.log(err);
       //     })
-      // }
+      // }                                            
       getSongList:function(){
-          this.$axios("album/music/kugou?apikey=3pRQWtkgUvFVI4QOLsOAFHBT92gTbFOU4mmkZISSAH2XexcxnsEg3YiAhjVTjj6w&kw="+this.singerList[this.id].singer)
+          this.$axios("/album/music/kugou?apikey=3pRQWtkgUvFVI4QOLsOAFHBT92gTbFOU4mmkZISSAH2XexcxnsEg3YiAhjVTjj6w&kw="+this.singerList[this.id].singer)
           .then((res)=>{
               var result=res.data.data;
               console.log(result);
               for(var i=0;i<result.length;i++)
               {
                   console.log(result[i].title);
-                  this.songsList.push({coverUrl:result[i].coverUrl,title:result[i].title,url:result[i].url,lyrics:result[i].lyrics});
+                  this.songsList.push({coverUrl:result[i].coverUrl,title:result[i].title,url:result[i].url,albumId:result[i].albumId,lyrics:result[i].lyrics});
               }
                console.log(this.songsList[0].title);
           }).catch((err)=>{
             console.log(err);
           })
       }
+      // getPlayDetail:function(){
+
+      //     this.$axios.get("/playSong/index.php?r=play/getdata&hash=79b5a1e39aad83a9a3b55921e307b3b7&album_id=2944963&_="+new Date().getTime()).then((res)=>{
+      //         console.log(res);
+      //         var result_arr=res.data.split("\n");
+      //         var lyric_arr=[];
+      //     }).catch((err)=>{
+      //         console.log(err);
+      //     })
+      //     console.log(this.song[index].lyrics);
+      // }
   },
-  computed:{
+  computed:{ 
     ...mapState([
         "singerList"
     ])
   },
   mounted(){
     // this.getRecommendList();
-    // this.getSongList();
+    this.getSongList();
     // console.log(this.songsList);
     this.id=this.$route.query.id;
+    // this.getPlayDetail();
     // console.log(this.$route.query.id);
   }
 }
