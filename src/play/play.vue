@@ -2,28 +2,25 @@
     <div class="play" :style="{background:'rgb(143, 140, 140)',height:screenHeight}">
         <div class="header">
             <img :src="backImg" alt="返回上一级" @click="goBack">
-            <p><span>{{song[index].title}}</span><br><span>{{song[index].author}}</span></p>
+            <p><span>{{songList[index].title}}</span><br><span>{{songList[index].author}}</span></p>
         </div>
         <div class="lyric-area" @click="exchange">
-            <img :src="song[index].coverUrl" alt="唱片图片" v-if="showLyric">
-            <ul v-else>
-                <li v-for="(item,index) in lyricArr" :key="index" >{{item}}</li>
+            <img :src="songList[index].coverUrl" alt="唱片图片" v-if="showLyric">
+            <ul v-else class="lyric-ul">
+                <li v-for="(item,index) in lyricArr" :key="index" >{{item.substr(10)}}</li>
             </ul>
         </div>
         <div class="play-control">
-            <p>
-                <!-- <span>{{activeLyricArr[0].time}}</span> -->
-                <audio :src="playUrl" controls autoplay @click="controlPlay(this)"></audio>
-                <!-- <span>{{activeLyricArr[activeLyricArr.length-1].time}}</span> -->
-            </p>
+            <audio id="audio" :src="playUrl" controls preload ></audio>
         </div>
     </div>
 </template>
 
 <script>
+import {mapState,mapActions} from 'vuex'
 export default {
     name:'Play',
-    props:['song'],
+    // props:['song'],
     data(){
         return{
             backImg:require('../assets/arrow-down.png'),
@@ -34,7 +31,9 @@ export default {
             activeLyricArr:[],
             currentTime:"",
             songurl:"",
-            playUrl:""
+            playUrl:"",
+            highlight:"highlight",
+            count:0
         }
     },
     methods:{
@@ -46,8 +45,8 @@ export default {
             this.showLyric=!this.showLyric;
         },
         getPlayUrl:function(){
-            var htmlUrl=this.song[this.index].url.split("#")[1]+new Date().getTime();
-            console.log(htmlUrl);
+            var htmlUrl=this.songList[this.index].url.split("#")[1]+new Date().getTime();
+            // console.log(htmlUrl);
             this.songurl="/playSong/index.php?r=play/getdata&"+htmlUrl;
         },
         getPlayDetail:function(){
@@ -56,34 +55,55 @@ export default {
                 var result=res.data.data;
                 this.playUrl=result.play_url;
                 this.lyricArr=result.lyrics.split("\r\n");
-                console.log(this.lyricArr);
+                // console.log(this.lyricArr);
+                //this.getNextLyric();
             }).catch((err)=>{
                 console.log(err);
             })
         },
-        controlPlay:function(obj){
-            if(obj.paused)
+        getTime(){
+            let curTime;
+            let audio=document.getElementsByTagName("audio")[0];
+            let ul=document.getElementsByClassName("lyric-ul")[0];
+            if(audio.played)
             {
-                obj.play();
+                curTime=audio.currentTime;
+                curTime=((Math.floor(curTime/60)<10) ? ('0'+Math.floor(curTime/60)) : (Math.floor(curTime/60)))+":"+((curTime % 60)<10 ? ('0'+(curTime % 60).toFixed(2)) : (curTime % 60).toFixed(2));
             }
-            else
-            {
-                obj.pause();
-            }
-        }
-        
+            this.currentTime=curTime;
+            console.log(this.currentTime);
+            for(let i=0;i<this.lyricArr.length;i++)
+			{
+				if(this.lyricArr[i].substring(1,9)==curTime)
+				{
+					let lis=document.getElementsByTagName("li");
+					for(li of lis)
+					{
+						li.className="";
+					}
+					lis[i].className="highlight";
+
+					// 控制滚动条向上
+					if(i>5)
+					{
+						ul.scrollTop+=10;
+					}
+				}
+			}
+		}
+
     },
     computed:{
         getScreenHeight:function(){
             this.screenHeight=screen.height+'px';
-        }
-    },
-    watch:{
+        },
+        ...mapState(["songList"])
     },
     mounted(){
         this.getScreenHeight;
         this.index=this.$route.query.index;
         this.getPlayDetail();
+        // setInterval(this.getTime(),3000);
     }
 }
 </script>
@@ -150,7 +170,7 @@ export default {
     overflow: auto;
     color:rgb(224, 206, 206);
     font-size: 16px;
-    text-align: left;
+    text-align: center;
 }
 @keyframes my-rotate {
     0% {transform: rotate(0)}
@@ -169,9 +189,13 @@ export default {
     color:#fff;
 }
 audio{
-    width:100%;
+    width:90%;
     /* height:60px; */
     /* border:1px solid red; */
+}
+.highlight{
+    color:rgb(22, 37, 119);
+    font-size:18px;
 }
 </style>
 

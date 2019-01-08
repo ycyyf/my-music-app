@@ -14,7 +14,7 @@ module.exports = {
         target:'http://api01.idataapi.cn:8000',
         changeOrigin:true,
         pathRewrite:{
-          '^/album':'/album'
+          '^/album':''   //
         }
       },
       '/playSong':{
@@ -22,7 +22,7 @@ module.exports = {
         secure:false,
         changeOrigin:true,
         pathRewrite:{
-          '^/playSong':'/playSong'
+          '^/playSong':''
         }
       }
     },

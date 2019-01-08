@@ -23,7 +23,14 @@ export default new Vuex.Store({
             {singer:"林志炫",avater:require("../assets/song-icon-1.jpg")},
             {singer:"Celine Dion",avater:require("../assets/song-icon-1.jpg")},
             {singer:"Taylor Swift",avater:require("../assets/song-icon-1.jpg")}
-        ]
+        ],
+        songList:[]
+    },
+    mutations:{
+        addSongList(state,data){
+            console.log(data.songs);
+            state.songList=data.songs;
+        }
     },
     actions:{
         

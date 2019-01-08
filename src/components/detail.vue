@@ -4,8 +4,8 @@
             <p><img :src="getImg" alt="" ><img src="../assets/arrow-left.png" alt="返回上级" @click="goBack()"><span>{{getType}}</span></p>
         </div>
         <ul class="songs-list">
-            <li class="play-all"><img :src="playAllImg" alt="播放全部" @click="changePlayStatus()"><span>播放全部(共{{song.length}}首)</span></li>
-            <router-link tag='li' :to="{path:'/play?index='+index}" v-for="(list,index) in song" :key="index"><img :src="list.coverUrl" alt="歌曲头像"><span>{{list.title}}</span> </router-link>
+            <li class="play-all"><img :src="playAllImg" alt="播放全部" @click="changePlayStatus()"><span>播放全部(共{{songList.length}}首)</span></li>
+            <router-link tag='li' :to="{path:'/play?index='+index}" v-for="(list,index) in songList" :key="index"><img :src="list.coverUrl" alt="歌曲头像"><span>{{list.title}}</span> </router-link>
         </ul> 
     </div>
 </template>
@@ -14,12 +14,12 @@
 import {mapState,mapActions} from 'vuex'
 export default {
     name:"Detail",
-    props:['song'],
+    // props:['song'],
     data(){
         return{
             id:0,
             playAllImg:require('../assets/暂停.png'),
-            // songList:[]
+            songList:[]
         }
     },
     methods:{
@@ -34,6 +34,25 @@ export default {
         },
         goBack(){
             this.$router.go(-1);
+        },
+        getSongList:function(){
+            this.$axios("/album/music/kugou?apikey=3pRQWtkgUvFVI4QOLsOAFHBT92gTbFOU4mmkZISSAH2XexcxnsEg3YiAhjVTjj6w&kw="+this.singerList[this.id].singer)
+            .then((res)=>{
+                console.log(this);
+                var result=res.data.data;
+                console.log(result);
+                for(var i=0;i<result.length;i++)
+                {
+                    console.log(result[i].title);
+                    this.songList.push({coverUrl:result[i].coverUrl,title:result[i].title,url:result[i].url,albumId:result[i].albumId,lyrics:result[i].lyrics});
+                }
+
+                // 把获得的歌曲信息存到store中，通过提交mutation的方式改变state中的状态，歌曲信息作为载荷传过去
+                this.$store.commit({type:"addSongList",songs:this.songList});
+                console.log(this.songList[0].title);
+            }).catch((err)=>{
+                console.log(err);
+            })
         }
     },
     computed:{
@@ -66,7 +85,10 @@ export default {
         // 触发store中的action并传递数据  // 刷新页面后参数会消失
         this.id=this.$route.query.id;
         this.ConType=this.$route.query.ConType;
-        console.log(this.ConType);
+        this.getSongList();
+        // console.log(this.$store);
+        // console.log(this.songList)
+        
     }
 }
 </script>
@@ -101,7 +123,8 @@ export default {
 }
 .songs-list{
     width:100%; 
-    height:420px;
+    /* height:420px; */
+    height:auto;
     position: relative;
     z-index: 3;
     border:1px solid #ccc;
@@ -110,6 +133,7 @@ export default {
     background:#fff;
     top:-20px;
     overflow-y: scroll;
+    overflow-x:hidden;
 }
 .songs-list li{
     height:50px;
