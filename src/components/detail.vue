@@ -14,7 +14,6 @@
 import {mapState,mapActions} from 'vuex'
 export default {
     name:"Detail",
-    // props:['song'],
     data(){
         return{
             id:0,
@@ -81,49 +80,47 @@ export default {
         }
     },
     mounted(){
-        //  console.log("mounted");
-        // 触发store中的action并传递数据  // 刷新页面后参数会消失
         this.id=this.$route.query.id;
         this.ConType=this.$route.query.ConType;
         this.getSongList();
-        // console.log(this.$store);
-        // console.log(this.songList)
-        
     }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .detail-top{
     width:100%;
     margin:0 auto;
-}
-.detail-top p{
-    position: relative;
-    width:100%; 
-}
-.detail-top p img:nth-child(1){
-    width:100%;
-    height:260px;
-}
-.detail-top p img:nth-child(2){
-    position:absolute;
-    left:5px;
-    top:5px;
-    width:20px;
-    height:20px;
-}
-.detail-top>p>span{
-    position:absolute;
-    left:28px;
-    top:2px;
-    color:#fff;
-    font-weight:700;
-    font-size:18px;
+    p{
+        position: relative;
+        width:100%; 
+        img{
+            &:nth-child(1)
+            {
+                width:100%;
+                height:260px;
+            }
+            &:nth-child(2)
+            {
+                position:absolute;
+                left:5px;
+                top:5px;
+                width:20px;
+                height:20px;
+            }
+        }
+        span{
+            position:absolute;
+            left:28px;
+            top:2px;
+            color:#fff;
+            font-weight:700;
+            font-size:18px;
+        }
+    }
 }
 .songs-list{
     width:100%; 
-    /* height:420px; */
     height:auto;
     position: relative;
     z-index: 3;
@@ -134,39 +131,46 @@ export default {
     top:-20px;
     overflow-y: scroll;
     overflow-x:hidden;
+    li{
+        height:50px;
+        border-bottom:1px solid #ccc;
+        padding-left: 10px;
+        display: flex;
+        align-items: center;
+        &:not(.play-all)
+        {
+            img{
+                width:40px;
+                height:40px;
+            }
+            span{
+                position:absolute;
+                left:70px;
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 20px;
+            }
+        }
+    }
 }
-.songs-list li{
-    height:50px;
-    border-bottom:1px solid #ccc;
-    padding-left: 10px;
-    display: flex;
-    align-items: center;
-}
-.songs-list li:not(.play-all) img{
-    width:40px;
-    height:40px;
-}
-.songs-list li:not(.play-all) span{
-    position:absolute;
-    left:70px;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 20px;
-}
+// .songs-list li:not(.play-all)
+// {
+
+// }
 .play-all{
     width:100%;
     height:30px;
     position: relative;
-}
-.play-all>img{
-    width:30px;
-    height:30px;
-}
-.play-all>span{
-    display: inline-block;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 16px;
-    margin-left:10px;
-    font-size-adjust: initial;
+    img{
+        width:30px;
+        height:30px;
+    }
+    span{
+        display: inline-block;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 16px;
+        margin-left:10px;
+        font-size-adjust: initial;
+    }
 }
 </style>
 

@@ -5,6 +5,7 @@ import Rank from '../rank/rank.vue'
 import Singer from '../singer/singer.vue'
 import Detail from '../components/detail.vue'
 import Play from '../play/play.vue'
+import Search from '../search/search.vue'
 
 Vue.use(Router)
 
@@ -13,33 +14,41 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/recommend'
+      redirect: '/recommend',
+      meta:{index:0}  //meta对象的index用来定义当前路由的层级，由小到大，由低到高
     },
     {
       path: '/recommend',
-      component: Recommend
-      // children:[{
-      //     path:":id",
-      //     component:Detail
-      // }]
+      component: Recommend,
+      meta:{index:1}
     },
     {
       path: '/rank',
-      component: Rank
+      component: Rank,
+      meta:{index:2}
     },
     {
       path: '/singer',
-      component: Singer
+      component: Singer,
+      meta:{index:3}
     },
     {
       path:'/detail',
       name:'detail',
-      component:Detail
+      component:Detail,
+      meta:{index:4}
     },
     {
       path:'/play',
       name:'play',
-      component:Play
+      component:Play,
+      meta:{index:5}
+    },
+    {
+      path:'/search',
+      name:'search',
+      component:Search,
+      meta:{index:6}
     }
   ]
 })

@@ -27,7 +27,7 @@
         <!-- 歌手 -->
         <div v-if="fatherComponent=='singer'">
             <ul class="singer-list">
-                <router-link tag="li" :to="{path:'/detail?id='+index+'&ConType=S'}" v-for="(item,index) in singerList" :key="index"><img src="item.avater" alt="歌手头像"><span>{{item.singer}}</span></router-link>
+                <router-link tag="li"  :to="{path:'/detail?id='+index+'&ConType=S'}" v-for="(item,index) in singerList" :key="index"><img :src="item.avater" alt="歌手头像"><span>{{item.singer}}</span></router-link>
             </ul>
         </div>
         <!-- 底部播放 -->
@@ -46,25 +46,7 @@ export default {
         return{
             num:0,
             banner:[require("../assets/banner1.jpg"),require("../assets/banner2.jpg"),require("../assets/banner3.jpg"),require("../assets/banner4.jpg")],
-            // RecommendList:[
-            //     {type:"纯音乐",count:10,imgUrl:require("../assets/song-icon-1.jpg")},
-            //     {type:"经典",count:10,imgUrl:require("../assets/song-icon-2.jpg")},
-            //     {type:"粤语",count:10,imgUrl:require("../assets/song-icon-3.jpg")},
-            //     {type:"欧美",count:10,imgUrl:require("../assets/song-icon-4.jpg")},
-            //     {type:"成名曲",count:10,imgUrl:require("../assets/song-icon-5.jpg")},
-            //     {type:"流行",count:10,imgUrl:require("../assets/song-icon-6.jpg")}
-            // ],
-            RankList:[],
-            // singerList:[
-            //     {singer:"朴树",avater:""},
-            //     {singer:"毛不易",avater:""},
-            //     {singer:"李健",avater:""},
-            //     {singer:"邓紫棋",avater:""},
-            //     {singer:"林志炫",avater:""},
-            //     {singer:"Celine Dion",avater:""},
-            //     {singer:"Taylor Swift",avater:""}
-            // ]
-           
+            RankList:[]
         }
     },
     methods:{
@@ -81,14 +63,15 @@ export default {
     },
     computed:mapState([
         "RecommendList","singerList"
-    ]),
+    ]),                                                                                                                                                                                                                           
     mounted(){
+        // 播放轮播图
         this.play();
     }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 /* 轮播 */
 .lunbo{
     height:200px;
@@ -96,10 +79,12 @@ export default {
     margin:-130px auto;
     overflow: hidden;
     border-radius:5px;
-}
-.lunbo img{
-    width:100%;
-    height:100%;
+    position: relative;
+    z-index:99;
+    img{
+        width:100%;
+        height:100%;
+    }
 }
 /* 小圆点 */
 .circles{
@@ -120,32 +105,32 @@ export default {
 /* 推荐歌单部分 */
 .recommend-list-box{
     margin-top:150px;
+    h5{
+        width:100%;
+        height:65px;
+        line-height: 65px;
+        padding-left:10px;
+        margin:0;
+        font-weight:900;
+    }
+    ul{
+        li{
+            display:inline-block;
+            width:30%;
+            height:173.75px;
+            margin-left:2.5%;
+            img{
+                width:100%;
+                height:116.25px;
+                border-radius: 5px;
+            }
+            p{
+                text-align: center;
+                margin-top: 20px;
+            }
+        }
+    } 
 }
-.recommend-list-box h5{
-    width:100%;
-    height:65px;
-    line-height: 65px;
-    padding-left:10px;
-    margin:0;
-    font-weight:900;
-}
-.recommend-list-box ul li{
-    display:inline-block;
-    width:30%;
-    height:173.75px;
-    margin-left:2.5%;
-    /* border:1px solid red; */
-}
-.recommend-list-box ul li>img{
-    width:100%;
-    height:116.25px;
-    border-radius: 5px;
-}
-.recommend-list-box ul li>p{
-    text-align: center;
-    margin-top: 20px;
-}
-
 /* 排行榜 */
 .rank{
     width:100%;
@@ -156,24 +141,50 @@ export default {
     z-index:999;
     top:-150px;
     padding-top:10px;
+    li{
+        width:94%;
+        height:106px;
+        margin:0 auto;
+        margin-top: 10px;
+        padding-bottom:3px;
+        border-bottom:1px solid #666;
+        border-radius: 5px;
+    }
+    img{
+        width:100px;
+        height:100px;
+        border-radius: 5px;
+    }
+    span{
+        display:inline-block;
+        width:60%;
+        margin-left: 10px;
+    }
 }
-.rank>li{
-    width:94%;
-    height:106px;
-    margin:0 auto;
-    margin-top: 10px;
-    padding-bottom:3px;
-    border-bottom:1px solid #666;
-    border-radius: 5px;
-}
-.rank img{
-    width:100px;
-    height:100px;
-    border-radius: 5px;
-}
-.rank span{
-    display:inline-block;
-    width:60%;
-    margin-left: 10px;
+
+// 歌手
+.singer-list{
+    li{
+        width:100%;
+        height:50px;
+        line-height: 50px;
+        box-sizing: border-box;
+        box-shadow: 0 2px 2px #aaa;
+        font-size: 18px;
+        font-family: 'Courier New', Courier, monospace;
+        &+li{
+            border-bottom:1px solid #999;
+        }
+        img{
+            width:40px;
+            height:40px;
+            vertical-align: middle;
+            margin-left:5px;
+        }
+        span{
+            margin-left:30px;
+            vertical-align:middle;
+        }
+    }
 }
 </style>

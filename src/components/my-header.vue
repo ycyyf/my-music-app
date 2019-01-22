@@ -10,7 +10,6 @@
         <router-link to="/rank" tag="li"><span>排行</span></router-link>
         <router-link to="/singer" tag="li"><span>歌手</span></router-link>
     </ul>
-    <!-- <router-view></router-view> -->
 </div>
 </template>
 
@@ -19,67 +18,70 @@
         name:"myHeader",
         data(){
             return{
-                title:"VMUSICJIN"
+                title:"MYMUSICAPP"
             }
         },
         methods:{
             SearchSong:function(){
-
+                // 路由跳转
+                this.$router.push({path:"/search"});
             }
         }
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+    $color:rgb(83, 94, 83);
     .header{
         width:100%;
         height:240px;
-        background: #f00;
+        background:$color;
+        .header-top{
+            display:-webkit-flex; /*Safari*/
+            display:flex;
+            justify-content:center;
+            margin:0;
+            li:nth-child(1),li:nth-child(3)
+            {
+                width:44px;
+                height:44px;
+                padding: 10px;
+                img{
+                    width:33px;
+                    height:33px;
+                }
+            }
+            li:nth-child(2){
+                margin:0 auto;
+                text-align: center;
+                color:#fff;
+                font-weight: 900;
+                font-size: 30px;
+            }
+        }
+        .header-top li{
+            display:inline-block;
+        }
     }
-    .header>.header-top{
-        display:-webkit-flex; /*Safari*/
-        display:flex;
-        justify-content:center;
-        margin:0;
-    }
-    .header>.header-top li{
-        display:inline-block;
-    }
-    .header>.header-top li:nth-child(1),.header>.header-top li:nth-child(3){
-        width:44px;
-        height:44px;
-        padding:10px;
-    }
-    .header>.header-top li:nth-child(1) img,.header>.header-top li:nth-child(3) img{
-        width:22px;
-        height:22px;
-    }
-    .header>.header-top li:nth-child(2){
-        margin:0 auto;
-        text-align: center;
-        color:#fff;
-        font-weight: 900;
-        font-size: 30px;
-    }
-
     /* 导航条 */
     .header-tab{
         display:-webkit-flex; /*Safari*/
         display:flex;
         justify-content:center;
         margin:0;
-    }
-    .header-tab>li{
-        width:33.33%;
-        height:44px; 
-        line-height:44px;
-        text-align: center;
-        border:1px solid red;
-        font-size: 18px;
-        color:#fff;
-        cursor: pointer;
-    }
-    .header-tab li.tab-active span{
-        border-bottom: 2px solid #fff;
+        li{
+            width:33.33%;
+            height:44px; 
+            line-height:44px;
+            text-align: center;
+            font-size: 18px;
+            color:#fff;
+            cursor: pointer;
+            &.tab-active{
+                span{
+                    border-bottom: 2px solid #fff;
+                }
+            }
+        }
     }
 </style>
