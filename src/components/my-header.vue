@@ -79,7 +79,10 @@
             cursor: pointer;
             &.tab-active{
                 span{
-                    border-bottom: 2px solid #fff;
+                    border-bottom: 4px solid #D4C9AB;
+                    color:#D4C9AB;
+                    font-weight: bold;
+                    font-size: 18px;
                 }
             }
         }

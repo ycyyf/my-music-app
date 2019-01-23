@@ -22,8 +22,11 @@ export default {
            //设置动画名称
            this.transitionName='slide-left';
         }
-        else{
+        else if(to.meta.index<from.meta.index){
           this.transitionName="slide-right";
+        }
+        else{
+          this.transitionName="";
         }
     }
   }
@@ -60,7 +63,7 @@ export default {
 .slide-right-leave-active 
 { 
   opacity: 0; 
-  transform: translate3d(100%, 0, 0); 
+  transform: translate3d(0, 0, 0); 
 } 
 .slide-left-enter { 
   opacity: 0; 
@@ -69,6 +72,6 @@ export default {
 .slide-left-leave-active 
 { 
   opacity: 0; 
-  transform: translate3d(-100%, 0, 0); 
+  transform: translate3d(0, 0, 0); 
 }
 </style>

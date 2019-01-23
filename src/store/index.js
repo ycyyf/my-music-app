@@ -24,16 +24,12 @@ export default new Vuex.Store({
             {singer:"Taylor Swift",avater:require("../assets/singer-TaylorSwift-icon.jpg")}
         ],
         songList:[]
-        // searchSongList:[]
     },
     mutations:{
         addSongList(state,data){
             console.log(data.songs);
             state.songList=data.songs;
         }
-        // addSearchSongList(state,data){
-        //     state.searchSongList=data.songs;
-        // }
     },
     actions:{
         

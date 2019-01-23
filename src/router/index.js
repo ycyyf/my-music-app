@@ -15,7 +15,7 @@ export default new Router({
     {
       path: '/',
       redirect: '/recommend',
-      meta:{index:0}  //meta对象的index用来定义当前路由的层级，由小到大，由低到高
+      meta:{index:1}  //meta对象的index用来定义当前路由的层级，由小到大，由低到高
     },
     {
       path: '/recommend',
@@ -25,30 +25,30 @@ export default new Router({
     {
       path: '/rank',
       component: Rank,
-      meta:{index:2}
+      meta:{index:1}
     },
     {
       path: '/singer',
       component: Singer,
-      meta:{index:3}
+      meta:{index:1}
     },
     {
       path:'/detail',
       name:'detail',
       component:Detail,
-      meta:{index:4}
+      meta:{index:2}
     },
     {
       path:'/play',
       name:'play',
       component:Play,
-      meta:{index:5}
+      meta:{index:3}
     },
     {
       path:'/search',
       name:'search',
       component:Search,
-      meta:{index:6}
+      meta:{index:2}
     }
   ]
 })

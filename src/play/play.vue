@@ -5,13 +5,13 @@
             <p><span>{{songList[index].title}}</span><br><span>{{songList[index].author}}</span></p>
         </div>
         <div class="lyric-area" @click="exchange">
-            <img :src="songList[index].coverUrl" alt="唱片图片" v-if="showLyric" :class="animationStyle">
-            <ul v-else class="lyric-ul" ref="lyricList">
-                <li ref="lyricLine" v-for="(item,index) in lyricArr[1]" :key="index">{{item}}</li>
+            <img :src="songList[index].coverUrl" alt="唱片图片" v-show="showLyric" :class="animationStyle" id="albumImg">
+            <ul v-show="!showLyric" class="lyric-ul" ref="lyricList">
+                <li ref="lyricLine" class="lyric-line" v-for="(item,index) in lyricArr[1]" :key="index">{{item}}</li>
             </ul>
         </div>
         <div class="play-control">
-            <audio id="audio" :src="playUrl" controls preload ></audio>
+            <audio ref="player" id="audio" :src="playUrl" controls preload @canplaythrough="initPlayer"></audio>
         </div>
     </div>
 </template>
@@ -25,20 +25,22 @@ export default {
     data(){
         return{
             backImg:require('../assets/arrow-down.png'),
+            //是否显示歌词
             showLyric:true,
+            //屏幕高度
             screenHeight:'',
-            currentLyric:"",
-            currentLineNum:"",
+            // 歌曲索引
             index:0,
+            // 歌词数组
             lyricArr:[],
+            // 当前歌词时间
             currentTime:"",
+            // 歌曲资源地址
             songurl:"",
+            // 歌曲MP3地址
             playUrl:"",
-            highlight:"highlight",
-            timer:null,
-            playStatus:0,
-            animationStyle:"animationStyle",
-            lyricStr:""
+            // 动画样式
+            animationStyle:""
         }
     },
     methods:{
@@ -53,6 +55,33 @@ export default {
             var htmlUrl=this.songList[this.index].url.split("#")[1]+new Date().getTime();
             this.songurl="/playSong/index.php?r=play/getdata&"+htmlUrl;
         },
+        initPlayer(){
+        },
+        addEventListeners:function(){
+            const self=this;
+            self.$refs.player.addEventListener('play',self.play);
+            self.$refs.player.addEventListener('pause',self.stop);
+            self.$refs.player.addEventListener('timeupdate',self.getCurrentTime);
+        },
+        removeEventListeners:function(){
+            const self=this;
+            self.$refs.player.removeEventListener('play',self.play);
+            self.$refs.player.removeEventListener('pause',self.stop);
+            self.$refs.player.removeEventListener('timeupdate',self.getCurrentTime);
+        },
+        play(){
+            let audio=document.querySelector("#audio");
+            let albumImg=document.querySelector("#albumImg");
+            audio.play();
+            this.animationStyle="animationStyle";
+            this.getCurrentTime();
+        },
+        stop(){
+            let audio=document.querySelector("#audio");
+            let albumImg=document.querySelector("#albumImg");
+            audio.pause();
+            this.animationStyle="pause animationStyle";
+        },
         getPlayDetail:function(){
             this.getPlayUrl();
             this.$axios.get(this.songurl).then((res)=>{
@@ -65,58 +94,53 @@ export default {
                 arr=result.lyrics.split("\r\n");
                 for(let i=0;i<arr.length;i++)
                 {
-                    timeArr.push(arr[i].substr(1,8));
+                    timeArr.push(arr[i].substr(1,5));
                     lyricArr.push(arr[i].substr(10));
                 }
                 this.lyricArr.push(timeArr);
                 this.lyricArr.push(lyricArr);
-                console.log(this.lyricArr);
+                // console.log(this.lyricArr);
             }).catch((err)=>{
                 console.log(err);
             })
         },
-        getTime(){
-            let curTime;
-            let audio=document.getElementsByTagName("audio")[0];
-            let ul=document.getElementsByClassName("lyric-ul")[0];
-            if(!audio.paused)
-            {
-                // this.playStatus=1;
-                curTime=audio.currentTime;
-                curTime=((Math.floor(curTime/60)<10) ? ('0'+Math.floor(curTime/60)) : (Math.floor(curTime/60)))+":"+((curTime % 60)<10 ? ('0'+(curTime % 60).toFixed(2)) : (curTime % 60).toFixed(2));
-                this.currentTime=curTime; 
-                console.log(this.currentTime);
+        getCurrentTime:function(){
+            const self=this;
+            let ulEle=document.getElementsByClassName("lyric-ul")[0];
+            //audio的currentTime属性的单位是秒
+            let curTime=self.$refs.player.currentTime;
+            let minute=Math.floor(curTime/60)<10?('0'+Math.floor(curTime/60)):Math.floor(curTime/60);
+            let sec=null;
 
-                let index=this.lyricArr[0].indexOf(curTime);
-                var liEle=document.getElementsByTagName("li")[index];
-                liEle.className="highlight";
-                this.animationStyle="animationStyle";
-                console.log(index);
-                console.log(1);
+            if(curTime%60!=0)
+            {
+                sec=Math.floor(curTime%60)<10?('0'+Math.floor(curTime%60)):Math.floor(curTime%60);
+                curTime=minute+":"+sec;
             }
             else
             {
-                console.log("播放处于暂停状态！");
-                audio.play();
-                this.animationStyle="";
+                curTime=minute+":00";
+            }
+            
+            self.currentTime=curTime;
+            for(let i=0;i<self.lyricArr[0].length;i++)
+            {
+                let liEle=document.getElementsByClassName("lyric-line")[i];
+
+                if(self.lyricArr[0][i]==self.currentTime)
+                {
+                    for(let j=0;j<self.lyricArr[0].length;j++)
+                    {
+                        let lis=document.getElementsByClassName("lyric-line")[j];
+                        lis.className="lyric-line";
+                    }
+                    liEle.className="lyric-line highlight";
+                }
             }
         },
-        getLyric(){
-           this.currentLyric=new Lyric(this.lyricStr,handlerLyric);
-           console.log(this.currentLyric);
-        },
-        handlerLyric({lineNum,txt})
-        {
-            this.currentLineNum=lineNum;
-            if(lineNum>5)
-            {
-                let lineEl=this.$ref.lyricLine[lineNum-5];
-                this.$refs.lyricList.scrollToElement(lineEl,1000);
-            }
-            else
-            {
-                this.$refs.lyricList.scrollTo(0,0,1000);
-            }
+        getDurationTime:function(){
+            const self=this;
+            self.timeDuration=parseInt(self.$refs.player.duration);
         }
     },
     computed:{
@@ -126,17 +150,15 @@ export default {
         ...mapState(["songList"])
     },
     watch:{
-        currentTime(newVal,oldVal){
-            this.getTime();
-            console.log(1);
-        }
     },
     mounted(){
         this.getScreenHeight;
         this.index=this.$route.query.index;
         this.getPlayDetail();
-        this.getTime();
-        this.getLyric();
+        this.addEventListeners();
+    },
+    beforeDestroy(){     
+        this.removeEventListeners();
     }
 }
 </script>
@@ -180,7 +202,6 @@ export default {
     width:100%;
     height:60%;
     position: relative;
-    /* border:1px solid red; */
     margin:10px auto;
     text-align: center;
     img{
@@ -210,8 +231,14 @@ export default {
 .animationStyle{
     animation: my-rotate  5s linear infinite;
 }
+.pause{
+    animation-play-state: paused;
+}
 @keyframes my-rotate {
     0% {transform: rotate(0)}
+    25%{transform:rotate(90deg)}
+    50%{transform:rotate(180deg)}
+    75%{transform:rotate(270deg)}
     100% {transform: rotate(360deg)}
 }
 .play-control{
@@ -223,9 +250,6 @@ export default {
         width:90%;
         margin-top: 15px;
     }
-}
-.activeLyric{
-    color:#fff;
 }
 .highlight{
     color:rgb(22, 37, 119);
