@@ -14,20 +14,20 @@
             <div class="recommend-list-box">
                 <h5>推荐歌单</h5>
                 <ul class="recommend-list">
-                    <router-link tag="li"  v-for="(list,index) in RecommendList" :key="index" :to="{path:'/detail?id='+index+'&ConType=R'}"><img :src="list.imgUrl" alt=""><p>{{list.type}}</p></router-link>
+                    <router-link tag="li"  v-for="(list,index) in RecommendList" :key="index" :to="{path:'/detail?id='+index+'&ConType=R'}"><img :src="list.imgUrl" alt=""><p>{{list.name}}</p></router-link>
                 </ul>
             </div>
         </div>
         <!-- 排行榜 -->
-        <div v-if="fatherComponent=='rank'">
+        <!-- <div v-if="fatherComponent=='rank'">
             <ul class="rank-list">
                 <router-link tag="li" to="" v-for="(list,index) in RankList" :key="index"><img :src="list.pic" alt=""><span>{{list.name}}</span></router-link>
             </ul>
-        </div>
+        </div> -->
         <!-- 歌手 -->
         <div v-if="fatherComponent=='singer'">
             <ul class="singer-list">
-                <router-link tag="li"  :to="{path:'/detail?id='+index+'&ConType=S'}" v-for="(item,index) in singerList" :key="index"><img :src="item.avater" alt="歌手头像"><span>{{item.singer}}</span></router-link>
+                <router-link tag="li"  :to="{path:'/detail?id='+index+'&ConType=S'}" v-for="(item,index) in singerList" :key="index"><img :src="item.avater" alt="歌手头像"><span>{{item.name}}</span></router-link>
             </ul>
         </div>
         <!-- 底部播放 -->

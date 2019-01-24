@@ -6,9 +6,11 @@
         </div>
         <div class="lyric-area" @click="exchange">
             <img :src="songList[index].coverUrl" alt="唱片图片" v-show="showLyric" :class="animationStyle" id="albumImg">
-            <ul v-show="!showLyric" class="lyric-ul" ref="lyricList">
-                <li ref="lyricLine" class="lyric-line" v-for="(item,index) in lyricArr[1]" :key="index">{{item}}</li>
-            </ul>
+            <div class="wrapper" ref="wrapper">
+                <ul v-show="!showLyric" class="content lyric-ul" ref="lyricList">
+                    <li ref="lyricLine" class="lyric-line" v-for="(item,index) in lyricArr[1]" :key="index">{{item}}</li>
+                </ul>
+            </div>
         </div>
         <div class="play-control">
             <audio ref="player" id="audio" :src="playUrl" controls preload @canplaythrough="initPlayer"></audio>
@@ -17,7 +19,8 @@
 </template>
 
 <script>
-import Lyric from 'lyric-parser'
+// import Lyric from 'lyric-parser'
+// import Bscroll from 'better-scroll'
 import {mapState,mapActions} from 'vuex'
 
 export default {
@@ -99,6 +102,9 @@ export default {
                 }
                 this.lyricArr.push(timeArr);
                 this.lyricArr.push(lyricArr);
+                // 初始化Bscroll
+                // this.scroll=new Bscroll(this.$refs.wrapper);
+
                 // console.log(this.lyricArr);
             }).catch((err)=>{
                 console.log(err);
@@ -135,6 +141,14 @@ export default {
                         lis.className="lyric-line";
                     }
                     liEle.className="lyric-line highlight";
+
+                    // console.log(ulEle.scrollTop);
+                   
+                    // console.log(liEle.clientHeight);
+                    if(i>5)
+                    {
+                        ulEle.scrollTop+=6;
+                    }
                 }
             }
         },
