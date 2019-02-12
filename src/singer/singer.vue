@@ -1,13 +1,18 @@
 <template>
-    <div>
+    <div class="singer-list">
         <my-header></my-header>
-        <TabContainer father-component="singer"></TabContainer>
+        <!-- <Scroll class="singer-content" ref="scroll" :data="singerList"> -->
+            <TabContainer father-component="singer"></TabContainer>
+        <!-- </Scroll> -->
     </div>
 </template>
 
 <script>
 import myHeader from '../components/my-header'
 import TabContainer from '../components/tabcontainer'
+// import Scroll from '../base/scroll/scroll.vue'
+// import {mapState} from "vuex"
+
 export default {
     name:"Singer",
     data(){
@@ -15,10 +20,13 @@ export default {
 
         }
     },
-    components:{ myHeader,TabContainer }
+    // computed:mapState(["singerList"]),
+    components:{ myHeader,TabContainer}
+    // mounted(){
+    //     console.log(this.singerList);
+    // }
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
 </style>

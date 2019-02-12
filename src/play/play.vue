@@ -6,11 +6,11 @@
         </div>
         <div class="lyric-area" @click="exchange">
             <img :src="songList[index].coverUrl" alt="唱片图片" v-show="showLyric" :class="animationStyle" id="albumImg">
-            <div class="wrapper" ref="wrapper">
+            <Scroll class="wrapper" ref="wrapper" :data="lyricArr">
                 <ul v-show="!showLyric" class="content lyric-ul" ref="lyricList">
                     <li ref="lyricLine" class="lyric-line" v-for="(item,index) in lyricArr[1]" :key="index">{{item}}</li>
                 </ul>
-            </div>
+            </Scroll>
         </div>
         <div class="play-control">
             <audio ref="player" id="audio" :src="playUrl" controls preload @canplaythrough="initPlayer"></audio>
@@ -20,8 +20,8 @@
 
 <script>
 // import Lyric from 'lyric-parser'
-// import Bscroll from 'better-scroll'
 import {mapState,mapActions} from 'vuex'
+import Scroll from '../base/scroll/scroll'
 
 export default {
     name:'Play',
@@ -102,10 +102,6 @@ export default {
                 }
                 this.lyricArr.push(timeArr);
                 this.lyricArr.push(lyricArr);
-                // 初始化Bscroll
-                // this.scroll=new Bscroll(this.$refs.wrapper);
-
-                // console.log(this.lyricArr);
             }).catch((err)=>{
                 console.log(err);
             })
@@ -163,6 +159,7 @@ export default {
         },
         ...mapState(["songList"])
     },
+    components:{Scroll},
     watch:{
     },
     mounted(){
@@ -230,16 +227,21 @@ export default {
         margin-left: -90px;
         margin-top:-90px;
     }
-    ul{
-        box-sizing: border-box;
-        width:280px;
+    .wrapper{
+        width:100%;
         height:300px;
-        /* border:1px solid red; */
-        margin:10px auto;
-        overflow: auto;
-        color:rgb(224, 206, 206);
-        font-size: 16px;
-        text-align: center;
+        overflow: hidden;
+        ul{
+            box-sizing: border-box;
+            width:280px;
+            // height:300px;
+            /* border:1px solid red; */
+            margin:10px auto;
+            overflow: auto;
+            color:rgb(224, 206, 206);
+            font-size: 16px;
+            text-align: center;
+        }
     }
 }
 .animationStyle{

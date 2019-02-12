@@ -34,8 +34,10 @@
     $color:rgb(83, 94, 83);
     .header{
         width:100%;
-        height:240px;
+        height:30vh;
         background:$color;
+        position: relative;
+        z-index: 1;
         .header-top{
             display:-webkit-flex; /*Safari*/
             display:flex;

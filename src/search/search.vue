@@ -5,19 +5,22 @@
             <input type="text" name="" id="" placeholder="搜索歌曲、歌手" v-focus="isFocus" v-model="searchStr" @keyup.enter="getSong">
             <img src="../assets/icon-cancel.png" alt="取消" class="icon-cancel" v-show="lenOfSearchStr>0" @click="cancel">
         </div>
-        <div class="hot-search">
-            <p>热门搜索</p>
+        <div class="search-history" ref="searchHistory">
+            <p>搜索历史</p><img src="../assets/icon-delete-all.png" alt="清空图标" @click="clearAll" class="clear-all">
             <div>
-                <span v-for="(item,index) in labelArr" :key="index" @click="addToInput(item)">{{item}}</span>
+                <span v-for="(item,index) in labelArr" :key="index" @click="addToInput(item)">{{item}}<img src="../assets/icon-delete.png" alt="删除图标"  @click.stop="deleteHis(index)"></span>
             </div>
         </div>
-        <ul class="song-list">
-            <router-link tag="li" :to="{path:'/play?index='+index}" v-for="(item,index) in songList" :key="index"><img :src="item.coverUrl" alt="封面"><span class="title">{{item.title}}</span><span class="singer">{{item.singer}}</span></router-link>
-        </ul>
+        <Scroll :data="songList" class="wrapper">
+            <ul class="song-list">
+                <router-link tag="li" :to="{path:'/play?index='+index}" v-for="(item,index) in songList" :key="index"><img v-lazy="item.coverUrl" alt="封面"><span class="title">{{item.title}}</span><span class="singer">{{item.singer}}</span></router-link>
+            </ul>
+        </Scroll>
     </div>
 </template>
 
 <script>
+import Scroll from '../base/scroll/scroll.vue'
 export default {
     name:"Search",
     data(){
@@ -37,6 +40,8 @@ export default {
     methods:{
         goBack:function()
         {
+            this.searchStr="";
+            this.songList=[];
             this.$router.go(-1);
         },
         addToInput(text){
@@ -46,10 +51,20 @@ export default {
             this.searchStr="";
         },
         getSong(){
+            // 判断labelArr中是否已有该记录
+            if(this.labelArr.indexOf(this.searchStr)==-1)
+            {
+                this.labelArr.push(this.searchStr);
+            }
+            if(this.labelArr.length>8)
+            {
+                this.labelArr.shift();
+            }
             this.$axios.get("/album/music/kugou?apikey=3pRQWtkgUvFVI4QOLsOAFHBT92gTbFOU4mmkZISSAH2XexcxnsEg3YiAhjVTjj6w&kw="+this.searchStr)
             .then((res)=>{
                 console.log(res.data.data);
                 let result=res.data.data;
+                this.songList=[];
                 for(let i=0;i<result.length;i++)
                 {
                     this.songList.push({singer:this.searchStr,title:result[i].title,coverUrl:result[i].coverUrl,lyrics:result[i].lyrics,url:result[i].url});
@@ -60,8 +75,15 @@ export default {
             .catch((err)=>{
 
             })
+        },
+        deleteHis(index){
+            this.labelArr.splice(index,1);
+        },
+        clearAll(){
+            this.labelArr=[];
         }
     },
+    components:{Scroll},
     // 自定义指令
     directives:{
         focus:{
@@ -81,8 +103,8 @@ export default {
 <style lang="scss" scoped>
 .header{
     width:100%;
-    height:40px;
-    line-height: 40px;
+    height:6vh;
+    line-height:6vh;
     background:rgb(83, 94, 83);
     img{
         width:20px;
@@ -104,14 +126,22 @@ export default {
         font-family: 'Courier New', Courier, monospace;
     }
 }
-.hot-search{
+.search-history{
+    position: relative;
     width:90%;
-    height:auto;
+    height:24vh;
     margin:0 auto;
-    // border:1px solid red;
     p{
+        display:inline-block;
         line-height: 50px;
         color:#666;
+    }
+    .clear-all{
+        position: absolute;
+        width:30px;
+        height:30px;
+        top:5px;
+        right:-10px;
     }
     div{
         span{
@@ -125,8 +155,18 @@ export default {
             padding:4px;
             color:#000;
             font-size: 16px;
+            img{
+                width:15px;
+                height:15px;
+                vertical-align: middle;
+            }
         }
     }
+}
+.wrapper{
+    width:100%;
+    height:70vh;
+    overflow: hidden;
 }
 .song-list{
     width:100%;
@@ -134,7 +174,6 @@ export default {
         list-style:none;
         height:50px;
         line-height: 50px;
-        // border:1px solid red;
         box-shadow: 0 2px 2px #999;
         margin-top:10px;
         cursor: pointer;

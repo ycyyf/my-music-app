@@ -1,17 +1,21 @@
 <template>
     <div class="detail-box">
         <div class="detail-top">
-            <p><img :src="getImg" alt="封面" ><img src="../assets/arrow-left.png" alt="返回上级" @click="goBack()"><span>{{getType}}1</span></p>
+            <p><img v-lazy="getImg" alt="封面" ><img src="../assets/arrow-left.png" alt="返回上级" @click="goBack()"><span>{{getType}}</span></p>
         </div>
-        <ul class="songs-list">
-            <li class="play-all"><img :src="playAllImg" alt="播放全部" @click="changePlayStatus()"><span>播放全部(共{{songList.length}}首)</span></li>
-            <router-link tag='li' :to="{path:'/play?index='+index}" v-for="(list,index) in songList" :key="index"><img :src="list.coverUrl" alt="歌曲头像"><span>{{list.title}}</span> </router-link>
-        </ul> 
+        <Scroll class="wrapper" :data="songList">
+            <ul class="songs-list">
+                <li class="play-all"><img v-lazy="playAllImg" alt="播放全部" @click="changePlayStatus()"><span>播放全部(共{{songList.length}}首)</span></li>
+                <router-link tag='li' :to="{path:'/play?index='+index}" v-for="(list,index) in songList" :key="index"><img v-lazy="list.coverUrl" alt="歌曲头像"><span>{{list.title}}</span> </router-link>
+            </ul> 
+        </Scroll>
     </div>
 </template>
 
 <script>
 import {mapState,mapActions} from 'vuex'
+import Scroll from '../base/scroll/scroll'
+
 export default {
     name:"Detail",
     data(){
@@ -105,6 +109,7 @@ export default {
             }
         }
     },
+    components:{Scroll},
     mounted(){
         this.id=this.$route.query.id;
         this.ConType=this.$route.query.ConType;
@@ -118,7 +123,7 @@ export default {
 .detail-top{
     width:100%;
     margin:0 auto;
-    // height: 260px;
+    height:30vh;
     p{
         position: relative;
         width:100%; 
@@ -149,6 +154,11 @@ export default {
         }
     }
 }
+.wrapper{
+    width: 100%;
+    height:70vh;
+    overflow: hidden;
+}
 .songs-list{
     width:100%; 
     height:auto;
@@ -158,9 +168,7 @@ export default {
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     background:#fff;
-    top:-20px;
-    overflow-y: scroll;
-    overflow-x:hidden;
+    overflow:hidden;
     li{
         height:50px;
         border-bottom:1px solid #ccc;

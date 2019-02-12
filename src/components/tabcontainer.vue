@@ -1,35 +1,30 @@
 <template>
-    <div>
-        <div v-if="fatherComponent=='recommend'">
-            <!-- 轮播 -->
-            <div class="lunbo">
-                <!-- 轮播内容 -->
-                <img v-for="(item,index) in banner" :src="item" :key="index" v-show="index==num" alt="">
-                <!-- 小圆点 -->
-                <ul class="circles">
-                    <li v-for="(item,index) in banner" :key="index" class="circle" :class="{'activeCircle':index==num}"></li>
+    <div class="tab-container">
+        <Scroll :data="singerList" class="wrapper">
+            <div v-if="fatherComponent=='recommend'" class="container">
+                <!-- 轮播 -->
+                <LunBo></LunBo>
+                <!-- 推荐列表 -->
+                <div class="recommend-list-box">
+                    <h5>推荐歌单</h5>
+                    <ul class="recommend-list">
+                        <router-link tag="li"  v-for="(list,index) in RecommendList" :key="index" :to="{path:'/detail?id='+index+'&ConType=R'}"><img v-lazy="list.imgUrl" alt=""><p>{{list.name}}</p></router-link>
+                    </ul>
+                </div>
+            </div>
+            <!-- 排行榜 -->
+            <div v-if="fatherComponent=='rank'">
+                <ul class="rank-list">
+                    <router-link tag="li" to="{path:'/detail?id='+index+'&ConType=K'}" v-for="(list,index) in rankList" :key="index"><img v-lazy="list.icon" alt=""><span>{{list.name}}</span></router-link>
                 </ul>
             </div>
-            <!-- 推荐列表 -->
-            <div class="recommend-list-box">
-                <h5>推荐歌单</h5>
-                <ul class="recommend-list">
-                    <router-link tag="li"  v-for="(list,index) in RecommendList" :key="index" :to="{path:'/detail?id='+index+'&ConType=R'}"><img :src="list.imgUrl" alt=""><p>{{list.name}}</p></router-link>
+            <!-- 歌手 -->
+            <div v-if="fatherComponent=='singer'" ref="slider" class="container">
+                <ul class="singer-list">
+                    <router-link tag="li"  :to="{path:'/detail?id='+index+'&ConType=S'}" v-for="(item,index) in singerList" :key="index"><img v-lazy="item.avater" alt="歌手头像"><span>{{item.name}}</span></router-link>
                 </ul>
             </div>
-        </div>
-        <!-- 排行榜 -->
-        <!-- <div v-if="fatherComponent=='rank'">
-            <ul class="rank-list">
-                <router-link tag="li" to="" v-for="(list,index) in RankList" :key="index"><img :src="list.pic" alt=""><span>{{list.name}}</span></router-link>
-            </ul>
-        </div> -->
-        <!-- 歌手 -->
-        <div v-if="fatherComponent=='singer'">
-            <ul class="singer-list">
-                <router-link tag="li"  :to="{path:'/detail?id='+index+'&ConType=S'}" v-for="(item,index) in singerList" :key="index"><img :src="item.avater" alt="歌手头像"><span>{{item.name}}</span></router-link>
-            </ul>
-        </div>
+        </Scroll>
         <!-- 底部播放 -->
         <div class="play-bottom">
 
@@ -39,72 +34,52 @@
 
 <script>
 import {mapState} from 'vuex'
+import LunBo from './lunbo.vue'
+import Scroll from '../base/scroll/scroll.vue'
+
 export default {
     name:"TabContainer",
     props:['fatherComponent'],
     data(){
         return{
-            num:0,
-            banner:[require("../assets/banner1.jpg"),require("../assets/banner2.jpg"),require("../assets/banner3.jpg"),require("../assets/banner4.jpg")],
             RankList:[]
         }
     },
-    methods:{
-        autoPlay(){
-            this.num++;
-            if(this.num==this.banner.length)
-            {
-                this.num=0;
-            }
-        },
-        play:function(){
-            setInterval(this.autoPlay,2000);
-        }
+    components:{
+        LunBo,Scroll
     },
     computed:mapState([
-        "RecommendList","singerList"
-    ]),                                                                                                                                                                                                                           
+        "RecommendList","singerList","rankList"
+    ]),
+    methods:{
+    },
     mounted(){
-        // 播放轮播图
-        this.play();
-    }
+    }                                                                                                                                                                                                                          
 }
 </script>
 
 <style scoped lang="scss">
-/* 轮播 */
-.lunbo{
-    height:200px;
-    width:98%;
-    margin:-130px auto;
-    overflow: hidden;
-    border-radius:5px;
+.tab-container{
     position: relative;
-    z-index:99;
-    img{
+    z-index: 999;
+    background: #fff;
+    top:-10vh;
+    overflow: hidden;
+}
+.wrapper{
+    width:100%;
+    height:80vh;
+    overflow: hidden;
+    // border:1px solid red;
+    .container{
         width:100%;
-        height:100%;
     }
-}
-/* 小圆点 */
-.circles{
-    margin:-30px auto;
-    text-align: center;
-}
-.circle{
-    display:inline-block;
-    width:8px;
-    height:8px;
-    border-radius: 50%;
-    background:#f1f1f1;
-    margin-right:10px;
-}
-.activeCircle{
-    background: #f00;
 }
 /* 推荐歌单部分 */
 .recommend-list-box{
-    margin-top:150px;
+    // margin-top:150px;
+    position: relative;
+    z-index:998;
     h5{
         width:100%;
         height:65px;
@@ -144,6 +119,7 @@ export default {
     li{
         width:94%;
         height:106px;
+        line-height:106px;
         margin:0 auto;
         margin-top: 10px;
         padding-bottom:3px;
@@ -154,16 +130,20 @@ export default {
         width:100px;
         height:100px;
         border-radius: 5px;
+        vertical-align: middle;
     }
     span{
         display:inline-block;
         width:60%;
         margin-left: 10px;
+        vertical-align: middle;
+        font-size: 18px;
     }
 }
 
 // 歌手
 .singer-list{
+    width:100%;
     li{
         width:100%;
         height:50px;

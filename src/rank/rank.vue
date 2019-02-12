@@ -1,13 +1,13 @@
 <template>
     <div class="rank">
         <my-header></my-header>
-        <!-- <TabContainer father-component="rank"></TabContainer> -->
-        <div class="rank-list">
+        <TabContainer father-component="rank"></TabContainer>
+        <!-- <div class="rank-list">
             <router-link tag="div" :to="{path:'/detail?id='+index+'&ConType=K'}" v-for="(item,index) in rankList" :key="index">
-                <img :src="item.icon" alt="图标">
+                <img v-lazy="item.icon" alt="图像">
                 <span>{{item.name}}</span>
             </router-link>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -34,6 +34,7 @@ export default {
 }
 .rank-list{
     position: relative;
+    z-index: 999;
     top:-70px;
     width: 100%;
     height:auto;

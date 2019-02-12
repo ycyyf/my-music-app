@@ -1,8 +1,10 @@
 <template>
   <div id="app">
-    <transition :name="transitionName">
-      <router-view ></router-view>
-    </transition>
+      <transition :name="transitionName">
+        <keep-alive>
+          <router-view ></router-view>
+        </keep-alive>
+      </transition>
   </div>
 </template>
 
@@ -39,11 +41,15 @@ export default {
   padding:0;
 }
 #app {
+  width:100%;
+  height:100vh;
+  /* border:1px solid red; */
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .slide-right-enter-active, 
