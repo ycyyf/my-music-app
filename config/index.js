@@ -18,7 +18,7 @@ module.exports = {
         }
       },
       '/playSong':{
-        target:'https://wwwapi.kugou.com/yy',
+        target:'http://wwwapi.kugou.com/yy',
         secure:false,
         changeOrigin:true,
         pathRewrite:{

@@ -177,12 +177,14 @@ export default {
 <style scoped lang="scss">
 .play{
     width:100%;
-    height:100%;
+    // height:100%;
+    height:100vh;
 }
 .header{
     position: relative;
     width:100%;
-    height:20%;
+    // height:20%;
+    height:20vh;
     border:1px solid rgb(143, 140, 140);
     img{
         position:absolute;
@@ -211,7 +213,8 @@ export default {
 }
 .lyric-area{
     width:100%;
-    height:60%;
+    // height:60%;
+    height: 60vh;
     position: relative;
     margin:10px auto;
     text-align: center;
@@ -259,7 +262,8 @@ export default {
 }
 .play-control{
     width:100%;
-    height:20%;
+    // height:20%;
+    height:20vh;
     /* border:1px solid red; */
     text-align: center;
     audio{

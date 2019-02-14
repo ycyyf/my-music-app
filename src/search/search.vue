@@ -124,6 +124,7 @@ export default {
         color:#fff;
         font-size:16px;
         font-family: 'Courier New', Courier, monospace;
+        outline: none;
     }
 }
 .search-history{
