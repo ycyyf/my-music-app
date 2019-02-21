@@ -15,7 +15,7 @@
             <!-- 排行榜 -->
             <div v-if="fatherComponent=='rank'">
                 <ul class="rank-list">
-                    <router-link tag="li" to="{path:'/detail?id='+index+'&ConType=K'}" v-for="(list,index) in rankList" :key="index"><img v-lazy="list.icon" alt=""><span>{{list.name}}</span></router-link>
+                    <router-link tag="li" :to="{path:'/detail?id='+index+'&ConType=K'}" v-for="(list,index) in rankList" :key="index"><img v-lazy="list.icon" alt=""><span>{{list.name}}</span></router-link>
                 </ul>
             </div>
             <!-- 歌手 -->

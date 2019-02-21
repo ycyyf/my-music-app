@@ -4,7 +4,7 @@
         <TabContainer father-component="rank"></TabContainer>
         <!-- <div class="rank-list">
             <router-link tag="div" :to="{path:'/detail?id='+index+'&ConType=K'}" v-for="(item,index) in rankList" :key="index">
-                <img v-lazy="item.icon" alt="图像">
+                <img v-lazy="item.icon" alt="图僝">
                 <span>{{item.name}}</span>
             </router-link>
         </div> -->
